@@ -2,14 +2,14 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="NominaPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-    <class>entities.TipoContrato</class>
-    <class>entities.CargaFamiliar</class>
-    <class>entities.Concepto</class>
-    <class>entities.Permiso</class>
-    <class>entities.Rol</class>
-    <class>entities.Cargo</class>
-    <class>entities.Departamento</class>
-    <class>entities.Empleado</class>
+    <class>nomina.entities.TipoContrato</class>
+    <class>nomina.entities.CargaFamiliar</class>
+    <class>nomina.entities.Concepto</class>
+    <class>nomina.entities.Permiso</class>
+    <class>nomina.entities.Rol</class>
+    <class>nomina.entities.Cargo</class>
+    <class>nomina.entities.Departamento</class>
+    <class>nomina.entities.Empleado</class>
     <class>nomina.entities.Empleado</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/nomina"/>
