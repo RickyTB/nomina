@@ -44,7 +44,7 @@ public class AddPositionForm extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         referenciaComboBox = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         apellidoLabel.setText("Grado salarial:");
 

@@ -33,6 +33,9 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
         empleados = empController.findEmpleadoEntities();
         DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
         empleados.forEach((Empleado emp) -> model.addRow(emp.toTableRow()));
+        employeeTable.getSelectionModel().addListSelectionListener(e -> {
+            detailButton.setEnabled(employeeTable.getSelectedRow() > -1);
+        });
     }
 
     /**
@@ -47,7 +50,7 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         employeeTable = new javax.swing.JTable();
-        addButton = new javax.swing.JButton();
+        detailButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         exitMenuItem = new javax.swing.JMenuItem();
@@ -62,6 +65,7 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Nomina");
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Empleados");
 
         employeeTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -89,8 +93,13 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
         });
         jScrollPane1.setViewportView(employeeTable);
 
-        addButton.setText("Detalles");
-        addButton.setEnabled(false);
+        detailButton.setText("Detalles");
+        detailButton.setEnabled(false);
+        detailButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                detailButtonActionPerformed(evt);
+            }
+        });
 
         fileMenu.setMnemonic('a');
         fileMenu.setText("Archivo");
@@ -168,7 +177,7 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(addButton))
+                        .addComponent(detailButton))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -177,11 +186,11 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(detailButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -210,6 +219,10 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
         AddDepartmentForm form = new AddDepartmentForm();
         form.setVisible(true);
     }//GEN-LAST:event_departmentMenuItemActionPerformed
+
+    private void detailButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detailButtonActionPerformed
+        System.out.println("XD: " + empleados.get(employeeTable.getSelectedRow()).getNombre());
+    }//GEN-LAST:event_detailButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -248,10 +261,10 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JButton addButton;
     private javax.swing.JMenu addMenu;
     private javax.swing.JMenuItem contractMenuItem;
     private javax.swing.JMenuItem departmentMenuItem;
+    private javax.swing.JButton detailButton;
     private javax.swing.JMenuItem employeeMenuItem;
     private javax.swing.JTable employeeTable;
     private javax.swing.JMenuItem exitMenuItem;

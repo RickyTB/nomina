@@ -43,7 +43,7 @@ public class AddContractForm extends javax.swing.JFrame {
         tipoComboBox = new javax.swing.JComboBox<>();
         vigenteBox = new javax.swing.JCheckBox();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         apellidoLabel.setText("Tipo:");
 

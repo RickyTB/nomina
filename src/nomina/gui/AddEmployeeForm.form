@@ -2,7 +2,7 @@
 
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
-    <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="defaultCloseOperation" type="int" value="2"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -62,7 +62,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="apellidoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="cedulaLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="direccionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -72,11 +72,11 @@
                                       <Component id="fechaSalidaLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="nacionalidadLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="nombreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="numeroCuentaLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="numeroCuentaLabel" alignment="0" max="32767" attributes="0"/>
                                       <Component id="sexoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="sueldoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="telefonoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="telefonoLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="telefonoLabel1" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -93,7 +93,7 @@
                                       <Component id="sexoField" alignment="0" pref="679" max="32767" attributes="0"/>
                                       <Component id="sueldoField" alignment="0" pref="679" max="32767" attributes="0"/>
                                       <Component id="telefonoField" alignment="0" pref="679" max="32767" attributes="0"/>
-                                      <Component id="jComboBox1" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="cargoComboBox" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
@@ -102,13 +102,13 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="telefonoLabel2" min="-2" pref="73" max="-2" attributes="0"/>
-                                      <Component id="telefonoLabel3" pref="79" max="32767" attributes="0"/>
+                                      <Component id="telefonoLabel3" pref="104" max="32767" attributes="0"/>
+                                      <Component id="telefonoLabel2" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jComboBox3" max="32767" attributes="0"/>
-                                      <Component id="jComboBox2" max="32767" attributes="0"/>
+                                      <Component id="departamentoComboBox" max="32767" attributes="0"/>
+                                      <Component id="tipoContratoComboBox" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -191,17 +191,17 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="telefonoLabel1" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
-                      <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cargoComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="telefonoLabel2" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
-                      <Component id="jComboBox2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="departamentoComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="telefonoLabel3" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
-                      <Component id="jComboBox3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tipoContratoComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                   <Component id="saveButton" min="-2" max="-2" attributes="0"/>
@@ -327,7 +327,7 @@
             <Property name="text" type="java.lang.String" value="Cargo:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="jComboBox1">
+        <Component class="javax.swing.JComboBox" name="cargoComboBox">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="4">
@@ -342,7 +342,7 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JComboBox" name="jComboBox2">
+        <Component class="javax.swing.JComboBox" name="departamentoComboBox">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="4">
@@ -367,7 +367,7 @@
             <Property name="text" type="java.lang.String" value="Tipo de contrato:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="jComboBox3">
+        <Component class="javax.swing.JComboBox" name="tipoContratoComboBox">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="4">

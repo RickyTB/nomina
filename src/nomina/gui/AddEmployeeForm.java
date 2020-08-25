@@ -8,10 +8,19 @@ package nomina.gui;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import nomina.controllers.CargoJpaController;
+import nomina.controllers.DepartamentoJpaController;
 import nomina.controllers.EmpleadoJpaController;
+import nomina.controllers.TipoContratoJpaController;
+import nomina.entities.Cargo;
+import nomina.entities.Departamento;
 import nomina.entities.Empleado;
+import nomina.entities.TipoContrato;
 import nomina.interfaces.AddEmployeeListener;
 import nomina.singletons.Constants;
 
@@ -24,6 +33,10 @@ public class AddEmployeeForm extends javax.swing.JFrame {
     private final Empleado empleado = new Empleado();
     private final AddEmployeeListener listener;
 
+    private List<Cargo> cargos;
+    private List<Departamento> departamentos;
+    private List<TipoContrato> contratos;
+
     /**
      * Creates new form AddEmployeeForm
      *
@@ -32,6 +45,27 @@ public class AddEmployeeForm extends javax.swing.JFrame {
     public AddEmployeeForm(AddEmployeeListener listener) {
         this.listener = listener;
         initComponents();
+        fillComboBoxes();
+    }
+
+    private void fillComboBoxes() {
+        CargoJpaController cargoController = new CargoJpaController(Constants.EMF);
+        DepartamentoJpaController deptController = new DepartamentoJpaController(Constants.EMF);
+        TipoContratoJpaController tipoContratoController = new TipoContratoJpaController(Constants.EMF);
+
+        cargos = cargoController.findCargoEntities();
+        departamentos = deptController.findDepartamentoEntities();
+        contratos = tipoContratoController.findTipoContratoEntities();
+
+        DefaultComboBoxModel cargoModel = new DefaultComboBoxModel();
+        cargos.forEach(cargo -> cargoModel.addElement(cargo.getNombre()));
+        cargoComboBox.setModel(cargoModel);
+        DefaultComboBoxModel deptModel = new DefaultComboBoxModel();
+        departamentos.forEach(departamento -> deptModel.addElement(departamento.getNombre()));
+        departamentoComboBox.setModel(deptModel);
+        DefaultComboBoxModel contratoModel = new DefaultComboBoxModel();
+        contratos.forEach(contrato -> contratoModel.addElement(contrato.getNombre()));
+        tipoContratoComboBox.setModel(contratoModel);
     }
 
     /**
@@ -73,13 +107,13 @@ public class AddEmployeeForm extends javax.swing.JFrame {
         saveButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         telefonoLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        cargoComboBox = new javax.swing.JComboBox<>();
+        departamentoComboBox = new javax.swing.JComboBox<>();
         telefonoLabel2 = new javax.swing.JLabel();
         telefonoLabel3 = new javax.swing.JLabel();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        tipoContratoComboBox = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         apellidoLabel.setText("Apellido:");
 
@@ -119,15 +153,15 @@ public class AddEmployeeForm extends javax.swing.JFrame {
 
         telefonoLabel1.setText("Cargo:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cargoComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        departamentoComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         telefonoLabel2.setText("Departamento:");
 
         telefonoLabel3.setText("Tipo de contrato:");
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        tipoContratoComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -142,7 +176,7 @@ public class AddEmployeeForm extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(apellidoLabel)
                                     .addComponent(cedulaLabel)
                                     .addComponent(direccionLabel)
@@ -152,11 +186,11 @@ public class AddEmployeeForm extends javax.swing.JFrame {
                                     .addComponent(fechaSalidaLabel)
                                     .addComponent(nacionalidadLabel)
                                     .addComponent(nombreLabel)
-                                    .addComponent(numeroCuentaLabel)
+                                    .addComponent(numeroCuentaLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(sexoLabel)
                                     .addComponent(sueldoLabel)
                                     .addComponent(telefonoLabel)
-                                    .addComponent(telefonoLabel1))
+                                    .addComponent(telefonoLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(apellidoField, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
@@ -172,18 +206,18 @@ public class AddEmployeeForm extends javax.swing.JFrame {
                                     .addComponent(sexoField, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
                                     .addComponent(sueldoField, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
                                     .addComponent(telefonoField, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
-                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(cargoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(telefonoLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(telefonoLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 79, Short.MAX_VALUE))
+                                    .addComponent(telefonoLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                                    .addComponent(telefonoLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                    .addComponent(departamentoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tipoContratoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -246,15 +280,15 @@ public class AddEmployeeForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(telefonoLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cargoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(telefonoLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(departamentoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(telefonoLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tipoContratoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(saveButton)
                 .addContainerGap())
@@ -300,10 +334,15 @@ public class AddEmployeeForm extends javax.swing.JFrame {
             empleado.setSexo(sexoField.getText());
             empleado.setSueldo(new BigDecimal(sueldoField.getText()));
             empleado.setTelefono(Integer.parseInt(telefonoField.getText()));
-            
+
+            empleado.setCargoId(cargos.get(cargoComboBox.getSelectedIndex()));
+            empleado.setDepartamentoId(departamentos.get(departamentoComboBox.getSelectedIndex()));
+            empleado.setTipoContratoId(contratos.get(tipoContratoComboBox.getSelectedIndex()));
+
             EmpleadoJpaController empController = new EmpleadoJpaController(Constants.EMF);
             empController.create(empleado);
             listener.onEmployeeAdded(empleado);
+            dispose();
         } catch (ParseException ex) {
             Logger.getLogger(AddEmployeeForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -312,8 +351,10 @@ public class AddEmployeeForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField apellidoField;
     private javax.swing.JLabel apellidoLabel;
+    private javax.swing.JComboBox<String> cargoComboBox;
     private javax.swing.JTextField cedulaField;
     private javax.swing.JLabel cedulaLabel;
+    private javax.swing.JComboBox<String> departamentoComboBox;
     private javax.swing.JTextField direccionField;
     private javax.swing.JLabel direccionLabel;
     private javax.swing.JTextField emailField;
@@ -324,9 +365,6 @@ public class AddEmployeeForm extends javax.swing.JFrame {
     private javax.swing.JLabel fechaIngresoLabel;
     private javax.swing.JTextField fechaSalidaField;
     private javax.swing.JLabel fechaSalidaLabel;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField nacionalidadField;
@@ -345,5 +383,6 @@ public class AddEmployeeForm extends javax.swing.JFrame {
     private javax.swing.JLabel telefonoLabel1;
     private javax.swing.JLabel telefonoLabel2;
     private javax.swing.JLabel telefonoLabel3;
+    private javax.swing.JComboBox<String> tipoContratoComboBox;
     // End of variables declaration//GEN-END:variables
 }
