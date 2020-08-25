@@ -8,7 +8,7 @@ package nomina.entities;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -52,8 +52,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Empleado.findBySueldo", query = "SELECT e FROM Empleado e WHERE e.sueldo = :sueldo")
     , @NamedQuery(name = "Empleado.findByNumeroCuenta", query = "SELECT e FROM Empleado e WHERE e.numeroCuenta = :numeroCuenta")
     , @NamedQuery(name = "Empleado.findByFechaIngreso", query = "SELECT e FROM Empleado e WHERE e.fechaIngreso = :fechaIngreso")
-    , @NamedQuery(name = "Empleado.findByFechaSalida", query = "SELECT e FROM Empleado e WHERE e.fechaSalida = :fechaSalida")
-    , @NamedQuery(name = "Empleado.findByFechaEmbarazo", query = "SELECT e FROM Empleado e WHERE e.fechaEmbarazo = :fechaEmbarazo")})
+    , @NamedQuery(name = "Empleado.findByFechaSalida", query = "SELECT e FROM Empleado e WHERE e.fechaSalida = :fechaSalida")})
 public class Empleado implements Serializable {
 
     @Transient
@@ -94,7 +93,7 @@ public class Empleado implements Serializable {
     private String estadoCivil;
     @Basic(optional = false)
     @Column(name = "sueldo")
-    private BigInteger sueldo;
+    private BigDecimal sueldo;
     @Basic(optional = false)
     @Column(name = "numero_cuenta")
     private String numeroCuenta;
@@ -106,10 +105,6 @@ public class Empleado implements Serializable {
     @Column(name = "fecha_salida")
     @Temporal(TemporalType.DATE)
     private Date fechaSalida;
-    @Basic(optional = false)
-    @Column(name = "fecha_embarazo")
-    @Temporal(TemporalType.DATE)
-    private Date fechaEmbarazo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "empleadoId")
     private List<Permiso> permisoList;
     @JoinColumn(name = "cargo_id", referencedColumnName = "id")
@@ -129,7 +124,7 @@ public class Empleado implements Serializable {
     public Empleado() {
     }
 
-    public Empleado(String nombre, String apellido, String cedula, String direccion, int telefono, String email, String nacionalidad, String sexo, String estadoCivil, BigInteger sueldo, String numeroCuenta, Date fechaIngreso, Date fechaSalida, Date fechaEmbarazo) {
+    public Empleado(String nombre, String apellido, String cedula, String direccion, int telefono, String email, String nacionalidad, String sexo, String estadoCivil, BigDecimal sueldo, String numeroCuenta, Date fechaIngreso, Date fechaSalida) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.cedula = cedula;
@@ -143,7 +138,6 @@ public class Empleado implements Serializable {
         this.numeroCuenta = numeroCuenta;
         this.fechaIngreso = fechaIngreso;
         this.fechaSalida = fechaSalida;
-        this.fechaEmbarazo = fechaEmbarazo;
     }
 
     public Integer getId() {
@@ -246,12 +240,12 @@ public class Empleado implements Serializable {
         changeSupport.firePropertyChange("estadoCivil", oldEstadoCivil, estadoCivil);
     }
 
-    public BigInteger getSueldo() {
+    public BigDecimal getSueldo() {
         return sueldo;
     }
 
-    public void setSueldo(BigInteger sueldo) {
-        BigInteger oldSueldo = this.sueldo;
+    public void setSueldo(BigDecimal sueldo) {
+        BigDecimal oldSueldo = this.sueldo;
         this.sueldo = sueldo;
         changeSupport.firePropertyChange("sueldo", oldSueldo, sueldo);
     }
@@ -284,16 +278,6 @@ public class Empleado implements Serializable {
         Date oldFechaSalida = this.fechaSalida;
         this.fechaSalida = fechaSalida;
         changeSupport.firePropertyChange("fechaSalida", oldFechaSalida, fechaSalida);
-    }
-
-    public Date getFechaEmbarazo() {
-        return fechaEmbarazo;
-    }
-
-    public void setFechaEmbarazo(Date fechaEmbarazo) {
-        Date oldFechaEmbarazo = this.fechaEmbarazo;
-        this.fechaEmbarazo = fechaEmbarazo;
-        changeSupport.firePropertyChange("fechaEmbarazo", oldFechaEmbarazo, fechaEmbarazo);
     }
 
     @XmlTransient
@@ -385,5 +369,10 @@ public class Empleado implements Serializable {
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         changeSupport.removePropertyChangeListener(listener);
     }
-    
+
+    public Object[] toTableRow() {
+        Object[] rowData = {id, nombre, apellido, cedula};
+        return rowData;
+    }
+
 }

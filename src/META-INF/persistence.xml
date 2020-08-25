@@ -10,7 +10,6 @@
     <class>nomina.entities.Cargo</class>
     <class>nomina.entities.Departamento</class>
     <class>nomina.entities.Empleado</class>
-    <class>nomina.entities.Empleado</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/nomina"/>
       <property name="javax.persistence.jdbc.user" value="grupo4"/>

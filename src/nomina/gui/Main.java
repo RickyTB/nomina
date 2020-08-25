@@ -5,29 +5,34 @@
  */
 package nomina.gui;
 
-import nomina.controllers.CargoJpaController;
-import nomina.entities.Cargo;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import nomina.controllers.EmpleadoJpaController;
+import nomina.entities.Empleado;
+import nomina.interfaces.AddEmployeeListener;
 import nomina.singletons.Constants;
 
 /**
  *
  * @author RickyTB
  */
-public class Main extends javax.swing.JFrame {
+public class Main extends javax.swing.JFrame implements AddEmployeeListener {
+
+    private List<Empleado> empleados;
 
     /**
      * Creates new form Main
      */
     public Main() {
         initComponents();
-        
-        /*
-        CargoJpaController cargoController = new CargoJpaController(Constants.EMF);
-        Cargo cargo = new Cargo("Cajero", "Grado salarial 1");
-        cargoController.create(cargo);
-        System.out.println("Nuevo cargo: " + cargo.getId() + ", nombre: " + cargo.getNombre() + ", referencia sueldo: " + cargo.getReferenciaSueldo());
-        Constants.EMF.close();
-        */
+        fillTable();
+    }
+
+    private void fillTable() {
+        EmpleadoJpaController empController = new EmpleadoJpaController(Constants.EMF);
+        empleados = empController.findEmpleadoEntities();
+        DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
+        empleados.forEach((Empleado emp) -> model.addRow(emp.toTableRow()));
     }
 
     /**
@@ -39,42 +44,59 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        employeeTable = new javax.swing.JTable();
+        addButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        openMenuItem = new javax.swing.JMenuItem();
-        saveMenuItem = new javax.swing.JMenuItem();
-        saveAsMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
+        addMenu = new javax.swing.JMenu();
+        employeeMenuItem = new javax.swing.JMenuItem();
+        positionMenuItem = new javax.swing.JMenuItem();
+        departmentMenuItem = new javax.swing.JMenuItem();
+        contractMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
-        contentsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Nomina");
 
-        fileMenu.setMnemonic('f');
-        fileMenu.setText("File");
+        jLabel1.setText("Empleados");
 
-        openMenuItem.setMnemonic('o');
-        openMenuItem.setText("Open");
-        fileMenu.add(openMenuItem);
+        employeeTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        saveMenuItem.setMnemonic('s');
-        saveMenuItem.setText("Save");
-        fileMenu.add(saveMenuItem);
+            },
+            new String [] {
+                "Id", "Nombre", "Apellido", "Cédula"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
 
-        saveAsMenuItem.setMnemonic('a');
-        saveAsMenuItem.setText("Save As ...");
-        saveAsMenuItem.setDisplayedMnemonicIndex(5);
-        fileMenu.add(saveAsMenuItem);
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
-        exitMenuItem.setMnemonic('x');
-        exitMenuItem.setText("Exit");
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(employeeTable);
+
+        addButton.setText("Detalles");
+        addButton.setEnabled(false);
+
+        fileMenu.setMnemonic('a');
+        fileMenu.setText("Archivo");
+
+        exitMenuItem.setMnemonic('s');
+        exitMenuItem.setText("Salir");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exitMenuItemActionPerformed(evt);
@@ -84,36 +106,52 @@ public class Main extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
-        editMenu.setMnemonic('e');
-        editMenu.setText("Edit");
+        addMenu.setMnemonic('g');
+        addMenu.setText("Agregar");
 
-        cutMenuItem.setMnemonic('t');
-        cutMenuItem.setText("Cut");
-        editMenu.add(cutMenuItem);
+        employeeMenuItem.setMnemonic('e');
+        employeeMenuItem.setText("Empleado");
+        employeeMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                employeeMenuItemActionPerformed(evt);
+            }
+        });
+        addMenu.add(employeeMenuItem);
 
-        copyMenuItem.setMnemonic('y');
-        copyMenuItem.setText("Copy");
-        editMenu.add(copyMenuItem);
+        positionMenuItem.setMnemonic('c');
+        positionMenuItem.setText("Cargo");
+        positionMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                positionMenuItemActionPerformed(evt);
+            }
+        });
+        addMenu.add(positionMenuItem);
 
-        pasteMenuItem.setMnemonic('p');
-        pasteMenuItem.setText("Paste");
-        editMenu.add(pasteMenuItem);
+        departmentMenuItem.setMnemonic('d');
+        departmentMenuItem.setText("Departamento");
+        departmentMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                departmentMenuItemActionPerformed(evt);
+            }
+        });
+        addMenu.add(departmentMenuItem);
 
-        deleteMenuItem.setMnemonic('d');
-        deleteMenuItem.setText("Delete");
-        editMenu.add(deleteMenuItem);
+        contractMenuItem.setMnemonic('o');
+        contractMenuItem.setText("Contrato");
+        contractMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contractMenuItemActionPerformed(evt);
+            }
+        });
+        addMenu.add(contractMenuItem);
 
-        menuBar.add(editMenu);
+        menuBar.add(addMenu);
 
-        helpMenu.setMnemonic('h');
-        helpMenu.setText("Help");
+        helpMenu.setMnemonic('y');
+        helpMenu.setText("Ayuda");
 
-        contentsMenuItem.setMnemonic('c');
-        contentsMenuItem.setText("Contents");
-        helpMenu.add(contentsMenuItem);
-
-        aboutMenuItem.setMnemonic('a');
-        aboutMenuItem.setText("About");
+        aboutMenuItem.setMnemonic('c');
+        aboutMenuItem.setText("Créditos");
         helpMenu.add(aboutMenuItem);
 
         menuBar.add(helpMenu);
@@ -124,11 +162,26 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(addButton))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 916, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 279, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -137,6 +190,26 @@ public class Main extends javax.swing.JFrame {
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
+
+    private void employeeMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_employeeMenuItemActionPerformed
+        AddEmployeeForm form = new AddEmployeeForm(this);
+        form.setVisible(true);
+    }//GEN-LAST:event_employeeMenuItemActionPerformed
+
+    private void positionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_positionMenuItemActionPerformed
+        AddPositionForm form = new AddPositionForm();
+        form.setVisible(true);
+    }//GEN-LAST:event_positionMenuItemActionPerformed
+
+    private void contractMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractMenuItemActionPerformed
+        AddContractForm form = new AddContractForm();
+        form.setVisible(true);
+    }//GEN-LAST:event_contractMenuItemActionPerformed
+
+    private void departmentMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_departmentMenuItemActionPerformed
+        AddDepartmentForm form = new AddDepartmentForm();
+        form.setVisible(true);
+    }//GEN-LAST:event_departmentMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -175,19 +248,26 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem contentsMenuItem;
-    private javax.swing.JMenuItem copyMenuItem;
-    private javax.swing.JMenuItem cutMenuItem;
-    private javax.swing.JMenuItem deleteMenuItem;
-    private javax.swing.JMenu editMenu;
+    private javax.swing.JButton addButton;
+    private javax.swing.JMenu addMenu;
+    private javax.swing.JMenuItem contractMenuItem;
+    private javax.swing.JMenuItem departmentMenuItem;
+    private javax.swing.JMenuItem employeeMenuItem;
+    private javax.swing.JTable employeeTable;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem openMenuItem;
-    private javax.swing.JMenuItem pasteMenuItem;
-    private javax.swing.JMenuItem saveAsMenuItem;
-    private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JMenuItem positionMenuItem;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void onEmployeeAdded(Empleado empleado) {
+        empleados.add(empleado);
+        DefaultTableModel model = (DefaultTableModel) employeeTable.getModel();
+        model.addRow(empleado.toTableRow());
+    }
 
 }

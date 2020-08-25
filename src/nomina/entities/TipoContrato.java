@@ -46,14 +46,14 @@ public class TipoContrato implements Serializable {
     private String nombre;
     @Basic(optional = false)
     @Column(name = "estado")
-    private int estado;
+    private Boolean estado;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoContratoId")
     private List<Empleado> empleadoList;
 
     public TipoContrato() {
     }
 
-    public TipoContrato(String nombre, int estado) {
+    public TipoContrato(String nombre, Boolean estado) {
         this.nombre = nombre;
         this.estado = estado;
     }
@@ -74,11 +74,11 @@ public class TipoContrato implements Serializable {
         this.nombre = nombre;
     }
 
-    public int getEstado() {
+    public Boolean getEstado() {
         return estado;
     }
 
-    public void setEstado(int estado) {
+    public void setEstado(Boolean estado) {
         this.estado = estado;
     }
 
