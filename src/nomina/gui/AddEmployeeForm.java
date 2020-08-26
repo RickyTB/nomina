@@ -328,7 +328,9 @@ public class AddEmployeeForm extends javax.swing.JFrame {
             empleado.setEmail(emailField.getText());
             empleado.setEstadoCivil(estadoCivilField.getText());
             empleado.setFechaIngreso(dateFormat.parse(fechaIngresoField.getText()));
-            empleado.setFechaSalida(dateFormat.parse(fechaSalidaField.getText()));
+            if (fechaSalidaField.getText() != null && !fechaSalidaField.getText().isEmpty()) {
+                empleado.setFechaSalida(dateFormat.parse(fechaSalidaField.getText()));
+            }
             empleado.setNacionalidad(nacionalidadField.getText());
             empleado.setNumeroCuenta(numeroCuentaField.getText());
             empleado.setSexo(sexoField.getText());

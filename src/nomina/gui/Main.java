@@ -17,7 +17,6 @@ import nomina.singletons.Constants;
  * @author RickyTB
  */
 public class Main extends javax.swing.JFrame implements AddEmployeeListener {
-
     private List<Empleado> empleados;
 
     /**
@@ -221,7 +220,8 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
     }//GEN-LAST:event_departmentMenuItemActionPerformed
 
     private void detailButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detailButtonActionPerformed
-        System.out.println("XD: " + empleados.get(employeeTable.getSelectedRow()).getNombre());
+        EmployeeDetailFrame frame = new EmployeeDetailFrame(empleados.get(employeeTable.getSelectedRow()));
+        frame.setVisible(true);
     }//GEN-LAST:event_detailButtonActionPerformed
 
     /**
