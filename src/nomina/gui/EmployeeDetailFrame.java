@@ -7,6 +7,7 @@ package nomina.gui;
 
 import nomina.entities.Empleado;
 import nomina.gui.panels.EmployeeDetailPanel;
+import nomina.gui.panels.FamilyPanel;
 
 /**
  *
@@ -30,7 +31,7 @@ public class EmployeeDetailFrame extends javax.swing.JFrame {
     private void setupFrame() {
         setTitle("Empleado: " + empleado.getNombre() + " " + empleado.getApellido());
         tabbedPane.addTab("Detalles", new EmployeeDetailPanel(empleado));
-        tabbedPane.addTab("Cargas familiares", new EmployeeDetailPanel(empleado));
+        tabbedPane.addTab("Cargas familiares", new FamilyPanel(empleado));
         tabbedPane.addTab("Roles de pago", new EmployeeDetailPanel(empleado));
     }
 

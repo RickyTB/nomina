@@ -5,6 +5,7 @@
  */
 package nomina.gui.panels;
 
+import java.text.SimpleDateFormat;
 import nomina.entities.Empleado;
 
 /**
@@ -37,8 +38,9 @@ public class EmployeeDetailPanel extends javax.swing.JPanel {
         cargoLabel.setText(empleado.getCargoId().getNombre());
         departamentoLabel.setText(empleado.getDepartamentoId().getNombre());
         tipoContratoLabel.setText(empleado.getTipoContratoId().getNombre());
-        fechaIngresoLabel.setText(empleado.getFechaIngreso().toString());
-        fechaSalidaLabel.setText(empleado.getFechaSalida() != null ? empleado.getFechaSalida().toString() : "N/A");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        fechaIngresoLabel.setText(dateFormat.format(empleado.getFechaIngreso()));
+        fechaSalidaLabel.setText(empleado.getFechaSalida() != null ? dateFormat.format(empleado.getFechaSalida()) : "N/A");
         sueldoLabel.setText("$" + empleado.getSueldo().toPlainString());
     }
 

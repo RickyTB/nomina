@@ -164,5 +164,5 @@ public class CargaFamiliarJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

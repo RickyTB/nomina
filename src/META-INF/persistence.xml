@@ -16,6 +16,7 @@
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
       <property name="javax.persistence.jdbc.password" value="12345678"/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider"/>
+      <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
     </properties>
   </persistence-unit>
 </persistence>

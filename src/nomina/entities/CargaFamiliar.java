@@ -6,6 +6,7 @@
 package nomina.entities;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -143,5 +144,11 @@ public class CargaFamiliar implements Serializable {
     public String toString() {
         return "entities.CargaFamiliar[ id=" + id + " ]";
     }
-    
+
+    public Object[] toTableRow() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Object[] rowData = {id, nombre, parentezco, sexo, dateFormat.format(fechaNacimiento)};
+        return rowData;
+    }
+
 }
