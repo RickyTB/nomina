@@ -70,7 +70,7 @@ public class Rol implements Serializable {
 
     public Rol() {
     }
-    
+
     public Rol(int anio, int mes, int horasTrabajadas, BigInteger horasTrabajadasCincuenta, int horasTrabajadasCien) {
         this.anio = anio;
         this.mes = mes;
@@ -168,5 +168,10 @@ public class Rol implements Serializable {
     public String toString() {
         return "entities.Rol[ id=" + id + " ]";
     }
-    
+
+    public Object[] toTableRow() {
+        Object[] rowData = {id, anio, mes, horasTrabajadas, horasTrabajadasCien, horasTrabajadasCincuenta, 100.12};
+        return rowData;
+    }
+
 }

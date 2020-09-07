@@ -6,43 +6,36 @@
 package nomina.gui.panels;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
-import nomina.controllers.CargaFamiliarJpaController;
-import nomina.controllers.exceptions.NonexistentEntityException;
-import nomina.entities.CargaFamiliar;
 import nomina.entities.Empleado;
-import nomina.gui.AddFamiliarForm;
-import nomina.interfaces.AddFamiliarListener;
-import nomina.singletons.Constants;
+import nomina.entities.Rol;
 
 /**
  *
  * @author RickyTB
  */
-public class FamilyPanel extends javax.swing.JPanel implements AddFamiliarListener {
+public class PaymentsPanel extends javax.swing.JPanel {
 
     private final Empleado empleado;
-    private List<CargaFamiliar> cargas;
+    private List<Rol> roles;
 
     /**
      * Creates new form FamilyPanel
      *
      * @param empleado
      */
-    public FamilyPanel(Empleado empleado) {
+    public PaymentsPanel(Empleado empleado) {
         this.empleado = empleado;
         initComponents();
         fillTable();
     }
 
     private void fillTable() {
-        cargas = empleado.getCargaFamiliarList();
-        DefaultTableModel model = (DefaultTableModel) familyTable.getModel();
-        cargas.forEach((CargaFamiliar carga) -> model.addRow(carga.toTableRow()));
-        familyTable.getSelectionModel().addListSelectionListener(e -> {
-            removeButton.setEnabled(familyTable.getSelectedRow() > -1);
+        roles = empleado.getRolList();
+        DefaultTableModel model = (DefaultTableModel) paymentsTable.getModel();
+        roles.forEach((Rol rol) -> model.addRow(rol.toTableRow()));
+        paymentsTable.getSelectionModel().addListSelectionListener(e -> {
+            removeButton.setEnabled(paymentsTable.getSelectedRow() > -1);
         });
     }
 
@@ -58,7 +51,7 @@ public class FamilyPanel extends javax.swing.JPanel implements AddFamiliarListen
         addButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        familyTable = new javax.swing.JTable();
+        paymentsTable = new javax.swing.JTable();
 
         addButton.setText("Agregar");
         addButton.addActionListener(new java.awt.event.ActionListener() {
@@ -75,19 +68,19 @@ public class FamilyPanel extends javax.swing.JPanel implements AddFamiliarListen
             }
         });
 
-        familyTable.setModel(new javax.swing.table.DefaultTableModel(
+        paymentsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Id", "Nombre", "Parentezco", "Sexo", "Fecha de nacimiento"
+                "Id", "Año", "Mes", "Horas trabajadas", "Horas extras 100%", "Horas extras 50%", "Valor"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true, true, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -98,7 +91,7 @@ public class FamilyPanel extends javax.swing.JPanel implements AddFamiliarListen
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(familyTable);
+        jScrollPane1.setViewportView(paymentsTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -129,36 +122,39 @@ public class FamilyPanel extends javax.swing.JPanel implements AddFamiliarListen
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        AddFamiliarForm form = new AddFamiliarForm(empleado, this);
-        form.setVisible(true);
+        //AddFamiliarForm form = new AddFamiliarForm(empleado, this);
+        //form.setVisible(true);
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+       /*
         try {
-            CargaFamiliar carga = cargas.get(familyTable.getSelectedRow());
+            CargaFamiliar carga = cargas.get(paymentsTable.getSelectedRow());
             cargas.remove(carga);
             carga.setEmpleadoId(null);
             CargaFamiliarJpaController cargaController = new CargaFamiliarJpaController(Constants.EMF);
             cargaController.destroy(carga.getId());
-            DefaultTableModel model = (DefaultTableModel) familyTable.getModel();
-            model.removeRow(familyTable.getSelectedRow());
+            DefaultTableModel model = (DefaultTableModel) paymentsTable.getModel();
+            model.removeRow(paymentsTable.getSelectedRow());
         } catch (NonexistentEntityException ex) {
-            Logger.getLogger(FamilyPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PaymentsPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+        */
     }//GEN-LAST:event_removeButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
-    private javax.swing.JTable familyTable;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable paymentsTable;
     private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
-
+/*
     @Override
     public void onFamiliarAdded(CargaFamiliar carga) {
         cargas.add(carga);
-        DefaultTableModel model = (DefaultTableModel) familyTable.getModel();
+        DefaultTableModel model = (DefaultTableModel) paymentsTable.getModel();
         model.addRow(carga.toTableRow());
     }
+*/
 }
