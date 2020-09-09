@@ -6,7 +6,6 @@
 package nomina.entities;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -58,7 +57,7 @@ public class Rol implements Serializable {
     private int horasTrabajadas;
     @Basic(optional = false)
     @Column(name = "horas_trabajadas_cincuenta")
-    private BigInteger horasTrabajadasCincuenta;
+    private int horasTrabajadasCincuenta;
     @Basic(optional = false)
     @Column(name = "horas_trabajadas_cien")
     private int horasTrabajadasCien;
@@ -71,7 +70,7 @@ public class Rol implements Serializable {
     public Rol() {
     }
 
-    public Rol(int anio, int mes, int horasTrabajadas, BigInteger horasTrabajadasCincuenta, int horasTrabajadasCien) {
+    public Rol(int anio, int mes, int horasTrabajadas, int horasTrabajadasCincuenta, int horasTrabajadasCien) {
         this.anio = anio;
         this.mes = mes;
         this.horasTrabajadas = horasTrabajadas;
@@ -111,11 +110,11 @@ public class Rol implements Serializable {
         this.horasTrabajadas = horasTrabajadas;
     }
 
-    public BigInteger getHorasTrabajadasCincuenta() {
+    public int getHorasTrabajadasCincuenta() {
         return horasTrabajadasCincuenta;
     }
 
-    public void setHorasTrabajadasCincuenta(BigInteger horasTrabajadasCincuenta) {
+    public void setHorasTrabajadasCincuenta(int horasTrabajadasCincuenta) {
         this.horasTrabajadasCincuenta = horasTrabajadasCincuenta;
     }
 
