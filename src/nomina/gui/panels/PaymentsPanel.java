@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import nomina.entities.Empleado;
 import nomina.entities.Rol;
+import nomina.gui.AddPaymentForm;
 
 /**
  *
@@ -20,7 +21,7 @@ public class PaymentsPanel extends javax.swing.JPanel {
     private List<Rol> roles;
 
     /**
-     * Creates new form FamilyPanel
+     * Creates new form PaymentsPanel
      *
      * @param empleado
      */
@@ -122,8 +123,8 @@ public class PaymentsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        //AddFamiliarForm form = new AddFamiliarForm(empleado, this);
-        //form.setVisible(true);
+        AddPaymentForm form = new AddPaymentForm(empleado);
+        form.setVisible(true);
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
