@@ -6,7 +6,7 @@
 package nomina.entities;
 
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,15 +25,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author RickyTB
  */
 @Entity
-@Table(name = "Concepto")
+@Table(name = "concepto")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Concepto.findAll", query = "SELECT c FROM Concepto c")
     , @NamedQuery(name = "Concepto.findById", query = "SELECT c FROM Concepto c WHERE c.id = :id")
+    , @NamedQuery(name = "Concepto.findByTipo", query = "SELECT c FROM Concepto c WHERE c.tipo = :tipo")
     , @NamedQuery(name = "Concepto.findByNombre", query = "SELECT c FROM Concepto c WHERE c.nombre = :nombre")
-    , @NamedQuery(name = "Concepto.findByDescripcion", query = "SELECT c FROM Concepto c WHERE c.descripcion = :descripcion")
     , @NamedQuery(name = "Concepto.findByValor", query = "SELECT c FROM Concepto c WHERE c.valor = :valor")})
 public class Concepto implements Serializable {
+    
+    public static boolean INGRESO = true;
+    public static boolean EGRESO = false;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,14 +45,15 @@ public class Concepto implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
+    @Column(name = "tipo")
+    private boolean tipo;
+    @Basic(optional = false)
     @Column(name = "nombre")
     private String nombre;
-    @Basic(optional = false)
-    @Column(name = "descripcion")
-    private String descripcion;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @Column(name = "valor")
-    private BigInteger valor;
+    private BigDecimal valor;
     @JoinColumn(name = "rol_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Rol rolId;
@@ -57,9 +61,14 @@ public class Concepto implements Serializable {
     public Concepto() {
     }
 
-    public Concepto(String nombre, String descripcion, BigInteger valor) {
+    public Concepto(Integer id) {
+        this.id = id;
+    }
+
+    public Concepto(Integer id, boolean tipo, String nombre, BigDecimal valor) {
+        this.id = id;
+        this.tipo = tipo;
         this.nombre = nombre;
-        this.descripcion = descripcion;
         this.valor = valor;
     }
 
@@ -71,6 +80,14 @@ public class Concepto implements Serializable {
         this.id = id;
     }
 
+    public boolean getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(boolean tipo) {
+        this.tipo = tipo;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -79,19 +96,11 @@ public class Concepto implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public BigInteger getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
-    public void setValor(BigInteger valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
 
@@ -125,7 +134,7 @@ public class Concepto implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Concepto[ id=" + id + " ]";
+        return "nomina.entities.Concepto[ id=" + id + " ]";
     }
     
 }

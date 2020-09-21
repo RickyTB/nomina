@@ -6,17 +6,21 @@
 package nomina.gui;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import nomina.entities.Concepto;
 import nomina.entities.Empleado;
 import nomina.entities.Rol;
+import nomina.interfaces.ChooseConceptListener;
 import nomina.interfaces.SimpleDocumentListener;
+import nomina.singletons.Constants;
+import pojos.IRValue;
 
 /**
  *
  * @author RickyTB
  */
-public class AddPaymentForm extends javax.swing.JFrame {
+public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptListener {
 
     private final Empleado empleado;
     private final Rol rol = new Rol(2020, 1, 40, 0, 0);
@@ -44,6 +48,7 @@ public class AddPaymentForm extends javax.swing.JFrame {
                 rol.setHorasTrabajadas(Integer.parseInt((String) hoursField.getText()));
                 updateTotal();
             } catch (NumberFormatException ex) {
+                rol.setHorasTrabajadas(0);
             }
         });
         extra50Field.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
@@ -51,6 +56,7 @@ public class AddPaymentForm extends javax.swing.JFrame {
                 rol.setHorasTrabajadasCincuenta(Integer.parseInt((String) extra50Field.getText()));
                 updateTotal();
             } catch (NumberFormatException ex) {
+                rol.setHorasTrabajadasCincuenta(0);
             }
         });
         extra100Field.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
@@ -58,19 +64,32 @@ public class AddPaymentForm extends javax.swing.JFrame {
                 rol.setHorasTrabajadasCien(Integer.parseInt((String) extra100Field.getText()));
                 updateTotal();
             } catch (NumberFormatException ex) {
+                rol.setHorasTrabajadasCien(0);
             }
         });
     }
 
-    private BigDecimal calculateTotal() {
-        BigDecimal sueldo = empleado.getSueldo().multiply(BigDecimal.valueOf(rol.getHorasTrabajadas())).divide(BigDecimal.valueOf(40.0));
-        BigDecimal extra50 = empleado.getSueldo().multiply(BigDecimal.valueOf(1.5)).multiply(BigDecimal.valueOf(rol.getHorasTrabajadasCincuenta())).divide(BigDecimal.valueOf(240.0));
-        BigDecimal extra100 = empleado.getSueldo().multiply(BigDecimal.valueOf(2.0)).multiply(BigDecimal.valueOf(rol.getHorasTrabajadasCien())).divide(BigDecimal.valueOf(240.0));
+    private BigDecimal calculateSalary() {
+        BigDecimal sueldo = empleado.getSueldo().multiply(BigDecimal.valueOf(rol.getHorasTrabajadas())).divide(BigDecimal.valueOf(40.0), 2, RoundingMode.HALF_EVEN);
+        BigDecimal extra50 = empleado.getSueldo().multiply(BigDecimal.valueOf(1.5)).multiply(BigDecimal.valueOf(rol.getHorasTrabajadasCincuenta())).divide(BigDecimal.valueOf(240.0), 2, RoundingMode.HALF_EVEN);
+        BigDecimal extra100 = empleado.getSueldo().multiply(BigDecimal.valueOf(2.0)).multiply(BigDecimal.valueOf(rol.getHorasTrabajadasCien())).divide(BigDecimal.valueOf(240.0), 2, RoundingMode.HALF_EVEN);
         return sueldo.add(extra50).add(extra100);
     }
 
+    private BigDecimal calculateTotal() {
+        BigDecimal sueldo = calculateSalary();
+        for (Concepto concepto : conceptos) {
+            if (concepto.getTipo() == Concepto.INGRESO) {
+                sueldo = sueldo.add(concepto.getValor());
+            } else {
+                sueldo = sueldo.subtract(concepto.getValor());
+            }
+        }
+        return sueldo.subtract(calculateIESS());
+    }
+
     private void updateTotal() {
-        totalLabel.setText("$" + calculateTotal().toPlainString());
+        totalLabel.setText("$" + calculateTotal().setScale(2, RoundingMode.HALF_UP).toPlainString());
     }
 
     /**
@@ -99,11 +118,13 @@ public class AddPaymentForm extends javax.swing.JFrame {
         extra50Field = new javax.swing.JTextField();
         totalLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        iessValueLabel = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         conceptsTable = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        addConceptButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
 
@@ -155,6 +176,11 @@ public class AddPaymentForm extends javax.swing.JFrame {
 
         jLabel1.setText("Valor total:");
 
+        jLabel2.setText("IESS");
+
+        iessValueLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        iessValueLabel.setText("$0.00");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -175,6 +201,7 @@ public class AddPaymentForm extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel15)
                             .addComponent(yearComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(totalLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel17)
@@ -183,9 +210,10 @@ public class AddPaymentForm extends javax.swing.JFrame {
                             .addComponent(jLabel11)
                             .addComponent(jLabel14)
                             .addComponent(jLabel16)
-                            .addComponent(jLabel1))
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(totalLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(iessValueLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -219,7 +247,11 @@ public class AddPaymentForm extends javax.swing.JFrame {
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(extra100Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(iessValueLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(totalLabel)
@@ -255,7 +287,12 @@ public class AddPaymentForm extends javax.swing.JFrame {
 
         jLabel9.setText("Conceptos");
 
-        jButton1.setText("Agregar");
+        addConceptButton.setText("Agregar");
+        addConceptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addConceptButtonActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Eliminar");
 
@@ -271,7 +308,7 @@ public class AddPaymentForm extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jButton1)
+                                .addComponent(addConceptButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButton2)))
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -286,7 +323,7 @@ public class AddPaymentForm extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(addConceptButton)
                     .addComponent(jButton2))
                 .addContainerGap())
         );
@@ -328,13 +365,19 @@ public class AddPaymentForm extends javax.swing.JFrame {
         rol.setAnio(Integer.parseInt((String) yearComboBox.getSelectedItem()));
     }//GEN-LAST:event_yearComboBoxActionPerformed
 
+    private void addConceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addConceptButtonActionPerformed
+        ChooseConceptAlert alert = new ChooseConceptAlert(this);
+        alert.setVisible(true);
+    }//GEN-LAST:event_addConceptButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addConceptButton;
     private javax.swing.JTable conceptsTable;
     private javax.swing.JLabel employeeLabel;
     private javax.swing.JTextField extra100Field;
     private javax.swing.JTextField extra50Field;
     private javax.swing.JTextField hoursField;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel iessValueLabel;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
@@ -343,6 +386,7 @@ public class AddPaymentForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -354,4 +398,53 @@ public class AddPaymentForm extends javax.swing.JFrame {
     private javax.swing.JLabel totalLabel;
     private javax.swing.JComboBox<String> yearComboBox;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void onConceptChosen(String conceptName) {
+        switch (conceptName) {
+            case "Impuesto a la renta":
+                conceptos.add(addIR());
+                break;
+        }
+    }
+
+    private BigDecimal calculateIESS() {
+        BigDecimal ingresos = calculateSalary();
+        for (Concepto concepto : conceptos) {
+            if (concepto.getTipo() == Concepto.INGRESO) {
+                ingresos = ingresos.add(concepto.getValor());
+            }
+        }
+        BigDecimal iess = ingresos.multiply(BigDecimal.valueOf(0.0945));
+        iessValueLabel.setText(iess.setScale(2, RoundingMode.HALF_UP).toPlainString());
+        return iess;
+    }
+
+    private Concepto addIR() {
+        Concepto concepto = new Concepto();
+        concepto.setNombre("Impuesto a la renta");
+        concepto.setTipo(Concepto.EGRESO);
+        
+        BigDecimal sueldoAnual = empleado.getSueldo().multiply(BigDecimal.valueOf(12));
+        
+        IRValue irValue = null;
+        for (IRValue currentValue : Constants.IR_TABLE) {
+            if (sueldoAnual.compareTo(currentValue.getMin()) >= 0 && sueldoAnual.compareTo(currentValue.getMax()) <= 0) {
+                irValue = currentValue;
+                break;
+            }
+        }
+
+        if (irValue == null) {
+            irValue = Constants.IR_TABLE[Constants.IR_TABLE.length - 1];
+        }
+        
+        BigDecimal excedente = sueldoAnual.subtract(irValue.getMin()).multiply(irValue.getExcedente());
+        BigDecimal valor = irValue.getBasica();
+        if (excedente.signum() >= 0) {
+            valor = valor.add(excedente);
+        }
+        concepto.setValor(valor.divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_EVEN));
+        return concepto;
+    }
 }
