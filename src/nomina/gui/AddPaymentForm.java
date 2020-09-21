@@ -38,19 +38,35 @@ public class AddPaymentForm extends javax.swing.JFrame {
         positionLabel.setText(empleado.getCargoId().getNombre() + " - Sueldo: $" + empleado.getSueldo().toPlainString());
 
         updateTotal();
-        
+
         hoursField.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
             try {
                 rol.setHorasTrabajadas(Integer.parseInt((String) hoursField.getText()));
                 updateTotal();
-            } catch (NumberFormatException ex) {}
+            } catch (NumberFormatException ex) {
+            }
+        });
+        extra50Field.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
+            try {
+                rol.setHorasTrabajadasCincuenta(Integer.parseInt((String) extra50Field.getText()));
+                updateTotal();
+            } catch (NumberFormatException ex) {
+            }
+        });
+        extra100Field.getDocument().addDocumentListener((SimpleDocumentListener) e -> {
+            try {
+                rol.setHorasTrabajadasCien(Integer.parseInt((String) extra100Field.getText()));
+                updateTotal();
+            } catch (NumberFormatException ex) {
+            }
         });
     }
 
     private BigDecimal calculateTotal() {
         BigDecimal sueldo = empleado.getSueldo().multiply(BigDecimal.valueOf(rol.getHorasTrabajadas())).divide(BigDecimal.valueOf(40.0));
-
-        return sueldo;
+        BigDecimal extra50 = empleado.getSueldo().multiply(BigDecimal.valueOf(1.5)).multiply(BigDecimal.valueOf(rol.getHorasTrabajadasCincuenta())).divide(BigDecimal.valueOf(240.0));
+        BigDecimal extra100 = empleado.getSueldo().multiply(BigDecimal.valueOf(2.0)).multiply(BigDecimal.valueOf(rol.getHorasTrabajadasCien())).divide(BigDecimal.valueOf(240.0));
+        return sueldo.add(extra50).add(extra100);
     }
 
     private void updateTotal() {
