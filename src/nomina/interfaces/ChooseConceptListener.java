@@ -5,10 +5,13 @@
  */
 package nomina.interfaces;
 
+import nomina.entities.Concepto;
+
 /**
  *
  * @author RickyTB
  */
 public interface ChooseConceptListener {
     public void onConceptChosen(String conceptName);
+    public void onAddConcept(Concepto concepto);
 }

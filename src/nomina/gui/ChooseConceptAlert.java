@@ -88,6 +88,7 @@ public class ChooseConceptAlert extends javax.swing.JFrame {
     private void acceptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptButtonActionPerformed
         String selectedConcept = (String) conceptComboBox.getSelectedItem();
         listener.onConceptChosen(selectedConcept);
+        dispose();
     }//GEN-LAST:event_acceptButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

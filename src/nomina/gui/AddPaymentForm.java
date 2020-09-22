@@ -8,6 +8,7 @@ package nomina.gui;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 import nomina.entities.Concepto;
 import nomina.entities.Empleado;
 import nomina.entities.Rol;
@@ -265,14 +266,14 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
 
             },
             new String [] {
-                "Concepto", "Valor"
+                "Concepto", "Valor", "Tipo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Double.class
+                java.lang.String.class, java.lang.Double.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -401,11 +402,27 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
 
     @Override
     public void onConceptChosen(String conceptName) {
+        Concepto concepto = null;
         switch (conceptName) {
             case "Impuesto a la renta":
-                conceptos.add(addIR());
+                concepto = addIR();
+                break;
+            case "Préstamo":
+                AddLendConcept lendFrame = new AddLendConcept(this);
+                lendFrame.setVisible(true);
                 break;
         }
+
+        if (concepto != null) {
+            onAddConcept(concepto);
+        }
+    }
+
+    @Override
+    public void onAddConcept(Concepto concepto) {
+        DefaultTableModel model = (DefaultTableModel) conceptsTable.getModel();
+        conceptos.add(concepto);
+        model.addRow(concepto.toTableRow());
     }
 
     private BigDecimal calculateIESS() {
@@ -424,9 +441,9 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
         Concepto concepto = new Concepto();
         concepto.setNombre("Impuesto a la renta");
         concepto.setTipo(Concepto.EGRESO);
-        
+
         BigDecimal sueldoAnual = empleado.getSueldo().multiply(BigDecimal.valueOf(12));
-        
+
         IRValue irValue = null;
         for (IRValue currentValue : Constants.IR_TABLE) {
             if (sueldoAnual.compareTo(currentValue.getMin()) >= 0 && sueldoAnual.compareTo(currentValue.getMax()) <= 0) {
@@ -438,7 +455,7 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
         if (irValue == null) {
             irValue = Constants.IR_TABLE[Constants.IR_TABLE.length - 1];
         }
-        
+
         BigDecimal excedente = sueldoAnual.subtract(irValue.getMin()).multiply(irValue.getExcedente());
         BigDecimal valor = irValue.getBasica();
         if (excedente.signum() >= 0) {

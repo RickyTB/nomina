@@ -7,6 +7,7 @@ package nomina.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Concepto.findByNombre", query = "SELECT c FROM Concepto c WHERE c.nombre = :nombre")
     , @NamedQuery(name = "Concepto.findByValor", query = "SELECT c FROM Concepto c WHERE c.valor = :valor")})
 public class Concepto implements Serializable {
-    
+
     public static boolean INGRESO = true;
     public static boolean EGRESO = false;
 
@@ -136,5 +137,10 @@ public class Concepto implements Serializable {
     public String toString() {
         return "nomina.entities.Concepto[ id=" + id + " ]";
     }
-    
+
+    public Object[] toTableRow() {
+        Object[] rowData = {nombre, valor, tipo ? "INGRESO" : "EGRESO"};
+        return rowData;
+    }
+
 }
