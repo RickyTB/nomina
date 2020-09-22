@@ -21,8 +21,6 @@ public class Constants {
     public static final String[] CONCEPTOS = {
         "Impuesto a la renta",
         "Préstamo",
-        "Décimo tercero",
-        "Décimo cuarto",
         "Otro"
     };
 

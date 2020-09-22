@@ -8,7 +8,9 @@ package nomina.gui;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.table.DefaultTableModel;
+import nomina.entities.CargaFamiliar;
 import nomina.entities.Concepto;
 import nomina.entities.Empleado;
 import nomina.entities.Rol;
@@ -411,10 +413,15 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
                 AddLendConcept lendFrame = new AddLendConcept(this);
                 lendFrame.setVisible(true);
                 break;
+            case "Otro":
+                AddOtherConcept otherFrame = new AddOtherConcept(this);
+                otherFrame.setVisible(true);
+                break;
         }
-
         if (concepto != null) {
             onAddConcept(concepto);
+        } else {
+            updateTotal();
         }
     }
 
@@ -423,6 +430,7 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
         DefaultTableModel model = (DefaultTableModel) conceptsTable.getModel();
         conceptos.add(concepto);
         model.addRow(concepto.toTableRow());
+        updateTotal();
     }
 
     private BigDecimal calculateIESS() {
