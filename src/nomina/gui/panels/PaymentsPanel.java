@@ -10,12 +10,13 @@ import javax.swing.table.DefaultTableModel;
 import nomina.entities.Empleado;
 import nomina.entities.Rol;
 import nomina.gui.AddPaymentForm;
+import nomina.interfaces.AddPaymentListener;
 
 /**
  *
  * @author RickyTB
  */
-public class PaymentsPanel extends javax.swing.JPanel {
+public class PaymentsPanel extends javax.swing.JPanel implements AddPaymentListener {
 
     private final Empleado empleado;
     private List<Rol> roles;
@@ -78,7 +79,7 @@ public class PaymentsPanel extends javax.swing.JPanel {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false
@@ -123,12 +124,12 @@ public class PaymentsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        AddPaymentForm form = new AddPaymentForm(empleado);
+        AddPaymentForm form = new AddPaymentForm(empleado, this);
         form.setVisible(true);
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-       /*
+        /*
         try {
             CargaFamiliar carga = cargas.get(paymentsTable.getSelectedRow());
             cargas.remove(carga);
@@ -140,7 +141,7 @@ public class PaymentsPanel extends javax.swing.JPanel {
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(PaymentsPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        */
+         */
     }//GEN-LAST:event_removeButtonActionPerformed
 
 
@@ -150,12 +151,11 @@ public class PaymentsPanel extends javax.swing.JPanel {
     private javax.swing.JTable paymentsTable;
     private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
-/*
+
     @Override
-    public void onFamiliarAdded(CargaFamiliar carga) {
-        cargas.add(carga);
+    public void onPaymentAdded(Rol rol) {
+        roles.add(rol);
         DefaultTableModel model = (DefaultTableModel) paymentsTable.getModel();
-        model.addRow(carga.toTableRow());
+        model.addRow(rol.toTableRow());
     }
-*/
 }

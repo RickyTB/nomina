@@ -6,6 +6,8 @@
 package nomina.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -169,8 +171,15 @@ public class Rol implements Serializable {
     }
 
     public Object[] toTableRow() {
-        Object[] rowData = {id, anio, mes, horasTrabajadas, horasTrabajadasCien, horasTrabajadasCincuenta, 100.12};
+        BigDecimal valor = BigDecimal.ZERO;
+        for (Concepto concepto : conceptoList) {
+            if (concepto.getTipo()) {
+                valor = valor.add(concepto.getValor());
+            } else {
+                valor = valor.subtract(concepto.getValor());
+            }
+        }
+        Object[] rowData = {id, anio, mes, horasTrabajadas, horasTrabajadasCien, horasTrabajadasCincuenta, valor.setScale(2, RoundingMode.HALF_EVEN).toPlainString()};
         return rowData;
     }
-
 }

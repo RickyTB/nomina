@@ -8,9 +8,9 @@ package nomina.gui;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Date;
 import javax.swing.table.DefaultTableModel;
-import nomina.entities.CargaFamiliar;
+import nomina.controllers.ConceptoJpaController;
+import nomina.controllers.RolJpaController;
 import nomina.entities.Concepto;
 import nomina.entities.Empleado;
 import nomina.entities.Rol;
@@ -18,6 +18,7 @@ import nomina.interfaces.ChooseConceptListener;
 import nomina.interfaces.SimpleDocumentListener;
 import nomina.singletons.Constants;
 import pojos.IRValue;
+import nomina.interfaces.AddPaymentListener;
 
 /**
  *
@@ -29,13 +30,17 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
     private final Rol rol = new Rol(2020, 1, 40, 0, 0);
     private final ArrayList<Concepto> conceptos = new ArrayList<>();
 
+    private final AddPaymentListener listener;
+
     /**
      * Creates new form AddPaymentForm
      *
      * @param empleado
+     * @param listener
      */
-    public AddPaymentForm(Empleado empleado) {
+    public AddPaymentForm(Empleado empleado, AddPaymentListener listener) {
         this.empleado = empleado;
+        this.listener = listener;
         initComponents();
         prepareUI();
     }
@@ -128,7 +133,7 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
         conceptsTable = new javax.swing.JTable();
         jLabel9 = new javax.swing.JLabel();
         addConceptButton = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -297,7 +302,12 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
             }
         });
 
-        jButton2.setText("Eliminar");
+        deleteButton.setText("Eliminar");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -313,7 +323,7 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(addConceptButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2)))
+                                .addComponent(deleteButton)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -327,13 +337,18 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addConceptButton)
-                    .addComponent(jButton2))
+                    .addComponent(deleteButton))
                 .addContainerGap())
         );
 
         jSplitPane1.setRightComponent(jPanel2);
 
         saveButton.setText("Guardar");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -373,15 +388,48 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
         alert.setVisible(true);
     }//GEN-LAST:event_addConceptButtonActionPerformed
 
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        int selectedRow = conceptsTable.getSelectedRow();
+        if (selectedRow == -1) {
+            return;
+        }
+
+        conceptos.remove(selectedRow);
+        DefaultTableModel model = (DefaultTableModel) conceptsTable.getModel();
+        model.removeRow(selectedRow);
+        updateTotal();
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        rol.setEmpleadoId(empleado);
+
+        RolJpaController rolController = new RolJpaController(Constants.EMF);
+        rolController.create(rol);
+
+        ConceptoJpaController conceptoController = new ConceptoJpaController(Constants.EMF);
+        
+        conceptos.add(addIESS());
+        conceptos.add(addSalary());
+        
+        for (Concepto concepto : conceptos) {
+            concepto.setRolId(rol);
+            conceptoController.create(concepto);
+        }
+        
+        rol.setConceptoList(conceptos);
+        listener.onPaymentAdded(rol);
+        dispose();
+    }//GEN-LAST:event_saveButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addConceptButton;
     private javax.swing.JTable conceptsTable;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JLabel employeeLabel;
     private javax.swing.JTextField extra100Field;
     private javax.swing.JTextField extra50Field;
     private javax.swing.JTextField hoursField;
     private javax.swing.JLabel iessValueLabel;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
@@ -470,6 +518,22 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
             valor = valor.add(excedente);
         }
         concepto.setValor(valor.divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_EVEN));
+        return concepto;
+    }
+
+    private Concepto addIESS() {
+        Concepto concepto = new Concepto();
+        concepto.setNombre("IESS");
+        concepto.setTipo(Concepto.EGRESO);
+        concepto.setValor(calculateIESS());
+        return concepto;
+    }
+
+    private Concepto addSalary() {
+        Concepto concepto = new Concepto();
+        concepto.setNombre("Sueldo");
+        concepto.setTipo(Concepto.INGRESO);
+        concepto.setValor(calculateSalary());
         return concepto;
     }
 }
