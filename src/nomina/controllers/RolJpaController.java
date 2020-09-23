@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.ParameterExpression;
 
 /**
  *
@@ -228,5 +230,26 @@ public class RolJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public List<Rol> findRolEntitiesByDate(int year, int month) {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery cq = cb.createQuery();
+            Root<Rol> root = cq.from(Rol.class);
+            cq.select(root);
+            
+            ParameterExpression<Integer> yearP = cb.parameter(Integer.class);
+            ParameterExpression<Integer> monthP = cb.parameter(Integer.class);
+            cq.where(cb.equal(root.get("anio"), yearP), cb.equal(root.get("mes"), monthP));
+            
+            Query q = em.createQuery(cq);
+            q.setParameter(yearP, year);
+            q.setParameter(monthP, month);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
 }

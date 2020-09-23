@@ -58,6 +58,8 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
         positionMenuItem = new javax.swing.JMenuItem();
         departmentMenuItem = new javax.swing.JMenuItem();
         contractMenuItem = new javax.swing.JMenuItem();
+        reportsMenu = new javax.swing.JMenu();
+        paymentsReportMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
@@ -155,6 +157,20 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
 
         menuBar.add(addMenu);
 
+        reportsMenu.setMnemonic('g');
+        reportsMenu.setText("Reportes");
+
+        paymentsReportMenuItem.setMnemonic('e');
+        paymentsReportMenuItem.setText("Rol de pagos");
+        paymentsReportMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                paymentsReportMenuItemActionPerformed(evt);
+            }
+        });
+        reportsMenu.add(paymentsReportMenuItem);
+
+        menuBar.add(reportsMenu);
+
         helpMenu.setMnemonic('y');
         helpMenu.setText("Ayuda");
 
@@ -224,6 +240,11 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
         frame.setVisible(true);
     }//GEN-LAST:event_detailButtonActionPerformed
 
+    private void paymentsReportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentsReportMenuItemActionPerformed
+        PaymentsReportFrame frame = new PaymentsReportFrame();
+        frame.setVisible(true);
+    }//GEN-LAST:event_paymentsReportMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -273,7 +294,9 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem paymentsReportMenuItem;
     private javax.swing.JMenuItem positionMenuItem;
+    private javax.swing.JMenu reportsMenu;
     // End of variables declaration//GEN-END:variables
 
     @Override

@@ -170,7 +170,7 @@ public class Rol implements Serializable {
         return "entities.Rol[ id=" + id + " ]";
     }
 
-    public Object[] toTableRow() {
+    public BigDecimal calculateValue() {
         BigDecimal valor = BigDecimal.ZERO;
         for (Concepto concepto : conceptoList) {
             if (concepto.getTipo()) {
@@ -179,7 +179,11 @@ public class Rol implements Serializable {
                 valor = valor.subtract(concepto.getValor());
             }
         }
-        Object[] rowData = {id, anio, mes, horasTrabajadas, horasTrabajadasCien, horasTrabajadasCincuenta, valor.setScale(2, RoundingMode.HALF_EVEN).toPlainString()};
+        return valor;
+    }
+
+    public Object[] toTableRow() {
+        Object[] rowData = {id, anio, mes, horasTrabajadas, horasTrabajadasCien, horasTrabajadasCincuenta, calculateValue().setScale(2, RoundingMode.HALF_EVEN).toPlainString()};
         return rowData;
     }
 }
