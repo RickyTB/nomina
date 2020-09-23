@@ -27,7 +27,7 @@ import nomina.interfaces.AddPaymentListener;
 public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptListener {
 
     private final Empleado empleado;
-    private final Rol rol = new Rol(2020, 1, 40, 0, 0);
+    private final Rol rol = new Rol(2020, 1, 160, 0, 0);
     private final ArrayList<Concepto> conceptos = new ArrayList<>();
 
     private final AddPaymentListener listener;
@@ -78,7 +78,7 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
     }
 
     private BigDecimal calculateSalary() {
-        BigDecimal sueldo = empleado.getSueldo().multiply(BigDecimal.valueOf(rol.getHorasTrabajadas())).divide(BigDecimal.valueOf(40.0), 2, RoundingMode.HALF_EVEN);
+        BigDecimal sueldo = empleado.getSueldo().multiply(BigDecimal.valueOf(rol.getHorasTrabajadas())).divide(BigDecimal.valueOf(160.0), 2, RoundingMode.HALF_EVEN);
         BigDecimal extra50 = empleado.getSueldo().multiply(BigDecimal.valueOf(1.5)).multiply(BigDecimal.valueOf(rol.getHorasTrabajadasCincuenta())).divide(BigDecimal.valueOf(240.0), 2, RoundingMode.HALF_EVEN);
         BigDecimal extra100 = empleado.getSueldo().multiply(BigDecimal.valueOf(2.0)).multiply(BigDecimal.valueOf(rol.getHorasTrabajadasCien())).divide(BigDecimal.valueOf(240.0), 2, RoundingMode.HALF_EVEN);
         return sueldo.add(extra50).add(extra100);
@@ -172,7 +172,7 @@ public class AddPaymentForm extends javax.swing.JFrame implements ChooseConceptL
 
         jLabel16.setText("Horas trabajadas");
 
-        hoursField.setText("40");
+        hoursField.setText("160");
 
         jLabel17.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel17.setText("Nuevo Rol de Pago");
