@@ -17,6 +17,7 @@ import nomina.singletons.Constants;
  * @author RickyTB
  */
 public class Main extends javax.swing.JFrame implements AddEmployeeListener {
+
     private List<Empleado> empleados;
 
     /**
@@ -176,6 +177,11 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
 
         aboutMenuItem.setMnemonic('c');
         aboutMenuItem.setText("Créditos");
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenuItemActionPerformed(evt);
+            }
+        });
         helpMenu.add(aboutMenuItem);
 
         menuBar.add(helpMenu);
@@ -244,6 +250,11 @@ public class Main extends javax.swing.JFrame implements AddEmployeeListener {
         PaymentsReportFrame frame = new PaymentsReportFrame();
         frame.setVisible(true);
     }//GEN-LAST:event_paymentsReportMenuItemActionPerformed
+
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
+        AboutFrame frame = new AboutFrame();
+        frame.setVisible(true);
+    }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
